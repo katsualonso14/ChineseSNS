@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 
-class PostPage extends StatefulWidget {
-  const PostPage({Key? key}) : super(key: key);
+class PostPage extends StatelessWidget {
+  PostPage(this.uid);
+  final String uid;
 
-  @override
-  _PostPageState createState() => _PostPageState();
-}
-
-class _PostPageState extends State<PostPage> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(
-        child: Text('postPage'),
+        child: Container(
+          color: Colors.red,
+          child: Text('uid is $uid'),
+        ),
       ),
     );
   }
+}
+
+class Users {
+  String uid;
+
+  Users({required this.uid});
 }
