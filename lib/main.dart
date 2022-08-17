@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         }
         if (snapshot.hasData) {
           // User が null でなない、つまりサインイン済みのホーム画面へ
-          return const PostPage();
+          return const SignInPage();
         }
         // User が null である、つまり未サインインのサインイン画面へ
         return const SignInPage();
