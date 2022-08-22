@@ -11,7 +11,7 @@ class SignInPage extends StatefulWidget {
   _SignInPage createState() => _SignInPage();
 }
 
-  class _SignInPage extends State<SignInPage> {
+class _SignInPage extends State<SignInPage> {
   String Email = "";
   String Password = "";
   // 登録・ログインに関する情報を表示
@@ -88,7 +88,7 @@ class SignInPage extends StatefulWidget {
                     });
                     Navigator.of(context).pushReplacement(
                         MaterialPageRoute(builder: (context){
-                          return PostPage(auth.currentUser!.uid);
+                          return PostPage(uid: auth.currentUser!.uid);
                         })
                     );
                   } catch (e) {
@@ -108,11 +108,7 @@ class SignInPage extends StatefulWidget {
               const SizedBox(height: 8),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) {
-                        return RegisterPage();
-                      })
-                  );
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPage()));
                 },
                 child: const Text(
                   'AccountRegister',
@@ -185,9 +181,9 @@ class SignInPage extends StatefulWidget {
 
   }
 // ８文字以上をチェック
-    String? pwdValidator(String? value) {
-      if (value!.length < 8) {
-        return 'パスワードは8文字以上で入力してください';
-      }
+  String? pwdValidator(String? value) {
+    if (value!.length < 8) {
+      return 'パスワードは8文字以上で入力してください';
     }
+  }
 }

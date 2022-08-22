@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:chinese_sns/Pages/PostPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class RegisterPage extends StatefulWidget {
   // RegisterPage({required Key key}) : super(key: key);
@@ -14,10 +17,11 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
 
   final GlobalKey<FormState> _registerFormKey = GlobalKey<FormState>();
-
   late TextEditingController nameInputController;
   late TextEditingController emailInputController;
   late TextEditingController pwdInputController;
+  File? image;
+  final picker = ImagePicker();
 
   @override
   initState() {
@@ -32,6 +36,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("アカウント作成"),
+        backgroundColor: Colors.orange,
       ),
       body: registerscreen(),
     );
@@ -45,6 +50,16 @@ class _RegisterPageState extends State<RegisterPage> {
               key: _registerFormKey,
               child: Column(
                 children: <Widget>[
+                  GestureDetector(
+                    onTap: (){
+                      getImageFromGallery();
+                    },
+                    child: CircleAvatar(
+                      foregroundImage: image == null ? null: FileImage(image!),
+                      radius: 70,
+                      child: Icon(Icons.add),
+                    ),
+                  ),
                   TextFormField(
                     decoration: InputDecoration(
                         labelText: 'Name*', hintText: "Name"),
@@ -95,13 +110,14 @@ class _RegisterPageState extends State<RegisterPage> {
                           "uid": currentUser.user?.uid,
                           "name": nameInputController.text,
                           "email": emailInputController.text,
+                          "icon":'https://blogger.googleusercontent.com/img/a/AVvXsEiBvTaWkOFFihJud4ctimi-3DXWWjwU_x98aUPlba97hoBkHFASSExnr4U5JatHKG_PTDVeyDJ37dPC1EbAtGLNPZP9ixKznYdrTee8cs8kEiiiDfFdHUJ3JDMg2rGLCDCsmYMxSKzq7ci_PrWr4UEuPW1I5VVPTOHY282HjbC4AU5tCVqnvsu-Ss3p'
                         })
                             .then((result) => {
                           Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => PostPage(
-                                      currentUser.user!.uid
+                                    uid: currentUser.user!.uid,
                                   )),
                                   (_) => false),
                           nameInputController.clear(),
@@ -129,10 +145,21 @@ class _RegisterPageState extends State<RegisterPage> {
       return '正しいEmailのフォーマットで入力してください';
     }
   }
-// ８文字以上をチェック
+  // ８文字以上をチェック
   String? pwdValidator(String? value) {
     if (value!.length < 8) {
       return 'パスワードは8文字以上で入力してください';
     }
   }
+  //画像読み込み
+  Future<void> getImageFromGallery() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if(pickedFile != null) {
+      setState(() {
+        image = File(pickedFile.path);
+      });
+    }
+
+  }
+
 }
