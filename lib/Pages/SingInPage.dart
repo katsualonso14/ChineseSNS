@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../Utils/Auth.dart';
+
 class SignInPage extends StatefulWidget {
   @override
   const SignInPage({Key? key}) : super(key: key);
@@ -73,30 +75,10 @@ class _SignInPage extends State<SignInPage> {
               const SizedBox(height: 8),
               ElevatedButton(
                 onPressed: () async {
-                  try {
-                    // メール/パスワードでログイン
-                    final FirebaseAuth auth = FirebaseAuth.instance;
-                    final UserCredential result =
-                    await auth.signInWithEmailAndPassword(
-                      email: Email,
-                      password: Password,
-                    );
-                    // ログインに成功した場合
-                    final User user = result.user!;
-                    setState(() {
-                      infoText = "ログインOK：${user.email}";
-                    });
-                    Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context){
-                          return PostPage(uid: auth.currentUser!.uid);
-                        })
-                    );
-                  } catch (e) {
-                    // ログインに失敗した場合
-                    setState(() {
-                      infoText = "ログインNG：${e.toString()}";
-                    });
-                  }
+                 var result =  await Auth.signIn(email: emailInputController.text, password: pwdInputController.text);
+                 if(result  == true) {
+                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PostPage(uid: 'a')));
+                 }
                 },
                 child: const Text("Login"),
                 style: ElevatedButton.styleFrom(
